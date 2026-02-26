@@ -1,0 +1,246 @@
+---
+// src/components/Construction.astro
+interface Props {
+    logoSrc: string;
+    logoAlt?: string;
+    tagline?: string;
+}
+
+const {
+    logoSrc,
+    logoAlt = "Logo",
+    tagline = "Electronic engineer & product designer specialising in audio hardware and DFM.",
+} = Astro.props;
+
+// Increased cell count to ensure coverage on large screens
+const cells = Array.from({ length: 1000 });
+---
+
+<section class="construction-container">
+    <div class="custom-cursor"></div>
+    <div class="grid-background">
+        {cells.map(() => <div class="grid-cell" />)}
+    </div>
+
+    <div class="content">
+        <img src={logoSrc} alt={logoAlt} class="hero-logo" />
+        <div>
+            {tagline && <p class="tagline">{tagline}</p>}
+        </div>
+        <div class="status">
+            <p class="construction-text">[website under construction]</p>
+            <div class="dots"></div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .construction-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        cursor: none; /* Hide default cursor */
+    }
+
+    .custom-cursor {
+        width: 24px;
+        height: 24px;
+        background-color: #464646;
+        border-radius: 50%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        will-change: transform;
+    }
+
+    .grid-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+        grid-template-rows: repeat(auto-fill, minmax(40px, 1fr));
+        pointer-events: all;
+        z-index: 1;
+
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        border-left: 1px solid rgba(0, 0, 0, 0.1);
+        animation: grid-load 2s ease-out forwards;
+    }
+
+    .grid-cell {
+        border-right: 1px solid rgba(0, 0, 0, 0.1);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        background-clip: padding-box;
+        animation: grid-load 2s ease-out forwards;
+    }
+
+    @keyframes grid-load {
+        from {
+            border-color: rgba(0, 0, 0, 0.5);
+        }
+        to {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    .content {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        pointer-events: none;
+        text-shadow:
+            0 0 10px white,
+            0 0 20px white;
+    }
+
+    .hero-logo {
+        max-width: 500px;
+        /* width: 100%; */
+        height: 80px;
+        margin-bottom: 10px;
+    }
+
+    .tagline {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #333;
+        text-align: center;
+        max-width: 480px;
+        margin: 0;
+    }
+
+    .status {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .construction-text {
+        color: #666;
+        margin-top: 2rem;
+        letter-spacing: 0.1em;
+        padding: 2px 8px;
+    }
+
+    .dots {
+        height: 1.2rem;
+        color: #0070f3;
+        font-weight: bold;
+    }
+
+    .dots::after {
+        content: "....";
+        animation: dot-cycle 2s infinite steps(4);
+    }
+
+    @keyframes dot-cycle {
+        0% {
+            content: "";
+        }
+        25% {
+            content: ".";
+        }
+        50% {
+            content: "..";
+        }
+        75% {
+            content: "...";
+        }
+        100% {
+            content: "....";
+        }
+    }
+</style>
+
+<script>
+    const cursor = document.querySelector(".custom-cursor") as HTMLElement;
+
+    let mouseX = 0;
+    let mouseY = 0;
+    let cursorX = 0;
+    let cursorY = 0;
+    const speed = 0.1;
+
+    // Trail management
+    const trail: HTMLElement[] = [];
+    const maxSteady = 6; // Cells stay at full opacity for this many steps
+    const fadeSteps = 3; // Then fade out over this many steps
+
+    window.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    function updateTrail(newEl: HTMLElement) {
+        // If the cell is already in the trail, remove it so we can move it to the front
+        const existingIndex = trail.indexOf(newEl);
+        if (existingIndex !== -1) {
+            trail.splice(existingIndex, 1);
+        }
+
+        trail.unshift(newEl);
+
+        // Update all cells in the trail based on their position
+        trail.forEach((cell, i) => {
+            let opacity = 1;
+
+            if (i >= maxSteady) {
+                // Calculate fade percentage
+                opacity = 1 - (i - maxSteady + 1) / fadeSteps;
+            }
+
+            if (opacity <= 0) {
+                cell.style.backgroundColor = "";
+                cell.style.borderColor = "";
+            } else {
+                cell.style.backgroundColor = `rgba(225, 127, 80, ${0.15 * opacity})`;
+                cell.style.borderColor = `rgba(225, 127, 80, ${0.3 * opacity})`;
+            }
+        });
+
+        // Remove truly invisible cells from the array
+        if (trail.length > maxSteady + fadeSteps) {
+            const removed = trail.pop();
+            if (removed) {
+                removed.style.backgroundColor = "";
+                removed.style.borderColor = "";
+            }
+        }
+    }
+
+    function animate() {
+        cursorX += (mouseX - cursorX) * speed;
+        cursorY += (mouseY - cursorY) * speed;
+
+        if (cursor) {
+            cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
+
+            const el = document.elementFromPoint(
+                cursorX,
+                cursorY,
+            ) as HTMLElement;
+            if (el && el.classList.contains("grid-cell") && trail[0] !== el) {
+                updateTrail(el);
+            }
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+</script>

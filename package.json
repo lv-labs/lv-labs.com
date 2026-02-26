@@ -9,6 +9,9 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.17.1"
+    "@fontsource-variable/sixtyfour": "^5.2.8",
+    "@fontsource/amatic-sc": "^5.2.7",
+    "astro": "^5.17.1",
+    "gsap": "^3.14.2"
   }
 }
