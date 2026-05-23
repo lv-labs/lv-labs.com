@@ -1,7 +1,7 @@
 ---
 import "../styles/global.css";
 import Construction from "../components/Construction.astro";
-// favicon is now served from public/favicon.svg so preview loads it reliably
+import faviconUrl from "../assets/favicon.svg?url";
 import logoUrl from "../assets/logo.svg?url";
 
 const cells = Array.from({ length: 10000 });
@@ -10,7 +10,7 @@ const cells = Array.from({ length: 10000 });
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/svg+xml" href={faviconUrl} />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>lv-labs</title>

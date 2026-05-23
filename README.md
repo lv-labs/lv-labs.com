@@ -1,46 +1,46 @@
-# Astro Starter Kit: Basics
+# lv-labs.com
+
+Portfolio site for `lv-labs.com`, built with Astro.
+
+## Local development
 
 ```sh
-pnpm create astro@latest -- --template basics
+npm install
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Build the production site:
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+```sh
+npm run build
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+The static output is written to `dist/`.
 
-## 🧞 Commands
+## Cloudflare Pages deployment
 
-All commands are run from the root of the project, from a terminal:
+This site can be deployed to Cloudflare Pages with GitHub integration.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+Use these settings when creating the Pages project:
 
-## 👀 Want to learn more?
+- Framework preset: `Astro`
+- Build command: `npm run build`
+- Build output directory: `dist`
+- Root directory: `/`
+- Production branch: `main`
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+After the GitHub repo is connected, Cloudflare Pages will rebuild and deploy on every push to the production branch.
+
+## Domain setup
+
+Once the Pages project is live:
+
+1. Add `lv-labs.com` as a custom domain in Cloudflare Pages.
+2. Add `www.lv-labs.com` if you want the `www` hostname too.
+3. Update DNS in Cloudflare so the domain points at the Pages project.
+4. Enable the redirect you want between apex and `www`.
+
+## Notes
+
+- The current site is a static Astro build, so it does not need any server-side adapter.
+- Server-side features such as a short-link API should live in a Cloudflare Worker or Pages Functions project, not in this static site unless you intentionally add functions later.

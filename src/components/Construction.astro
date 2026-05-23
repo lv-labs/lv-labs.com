@@ -6,31 +6,27 @@ interface Props {
     tagline?: string;
 }
 
-const {
-    logoSrc,
-    logoAlt = "lv-labs",
-    tagline = "electronic engineer & product designer specialising in audio hardware and DFM.",
-} = Astro.props;
+const { logoSrc, logoAlt = "lv-labs" } = Astro.props;
 ---
 
-<div class="content">
+<body>
     <img src={logoSrc} alt={logoAlt} class="hero-logo" />
-    <div>
-        {tagline && <p class="tagline">{tagline}</p>}
+
+    <div class="tagline-content">
+        <p id="tagline-original">electronic engineer & product designer</p>
     </div>
 
     <div class="construction">
         <p class="construction-text">[website under construction]</p>
-        <div class="dots"></div>
     </div>
-</div>
+</body>
 
 <style>
     :root {
-        --logo-width: clamp(500px, 50vw, 1000px);
+        --logo-width: clamp(800px, 50vw, 1000px);
     }
 
-    .content {
+    body {
         position: relative;
         display: flex;
         flex-direction: column;
@@ -38,6 +34,7 @@ const {
         justify-content: center;
         height: 100vh;
         pointer-events: none;
+        font-family: "Doto";
     }
 
     .hero-logo {
@@ -45,59 +42,14 @@ const {
         height: auto;
     }
 
-    .tagline {
-        font-family: "Doto";
-        font-size: 1.5rem;
+    .tagline-content {
+        font-size: 1rem;
         font-weight: 500;
-        color: #027b0e;
+        text-align: center;
         letter-spacing: 0.5rem;
-        text-align: center;
-        width: 100%; /* fill available space */
-        max-width: var(--logo-width); /* same as logo */
-        margin-top: 1rem;
-    }
-
-    .construction {
-        position: absolute;
-        bottom: 20%;
-        font-family: "Doto";
-        font-size: 1.2rem;
-        color: #0070f3;
-        letter-spacing: 0.2rem;
-        text-align: center;
-    }
-
-    .dots {
-        font-size: 1.5rem;
-        font-weight: bold;
-
-        text-align: center;
-    }
-
-    .dots::after {
-        content: ".";
-        animation: dot-cycle 1.5s infinite steps(6);
-    }
-
-    @keyframes dot-cycle {
-        0% {
-            content: ".";
-        }
-        20% {
-            content: "...";
-        }
-        40% {
-            content: ".....";
-        }
-        60% {
-            content: ".......";
-        }
-        80% {
-            content: ".....";
-        }
-        100% {
-            content: "...";
-        }
+        line-height: 1;
+        max-width: var(--logo-width);
+        color: #027b0e;
     }
 </style>
 
